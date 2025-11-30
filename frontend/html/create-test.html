@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Test - Создание теста</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/buttons.css">
+    <link rel="stylesheet" href="../css/forms.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/cards.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/create-test.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">Sky Test</div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">📝</span>
+                            Мои тесты
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="create-test.html" class="nav-link active">
+                            <span class="nav-icon">➕</span>
+                            Создать тест
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <span class="nav-icon">⚙️</span>
+                            Настройки
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar">ИИ</div>
+                    <div class="user-details">
+                        <div class="user-name">Иван Иванов</div>
+                        <div class="user-email">ivan@email.com</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Создание нового теста</h1>
+                <p class="header-subtitle">Заполните информацию о тесте и добавьте вопросы</p>
+            </div>
+
+            <div class="form-card">
+                <!-- Test Info -->
+                <div class="form-section">
+                    <h2 class="section-title">Основная информация</h2>
+
+                    <div class="form-group">
+                        <label for="test-title">Название теста</label>
+                        <input type="text" id="test-title" placeholder="Например: Основы программирования">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="test-description">Описание</label>
+                        <textarea id="test-description" placeholder="Краткое описание теста и его содержания"></textarea>
+                        <p class="helper-text">Это поможет студентам понять, о чём тест</p>
+                    </div>
+                </div>
+
+                <!-- Questions -->
+                <div class="form-section">
+                    <h2 class="section-title">Вопросы</h2>
+
+                    <div class="questions-list" id="questionsList">
+                        <!-- Questions will be added here -->
+                    </div>
+
+                    <button type="button" class="btn-secondary btn-add-question" id="addQuestionBtn">
+                        ➕ Добавить вопрос
+                    </button>
+                </div>
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn-primary" id="publishBtn">Опубликовать тест</button>
+                    <button type="button" class="btn-outline" id="draftBtn">Сохранить черновик</button>
+                    <button type="button" class="btn-outline" id="cancelBtn">Отмена</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/sidebar.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/create-test.js"></script>
+</body>
+</html>

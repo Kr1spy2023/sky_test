@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Test - Мои тесты</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/buttons.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/cards.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">Sky Test</div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link active">
+                            <span class="nav-icon">📝</span>
+                            Мои тесты
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="create-test.html" class="nav-link">
+                            <span class="nav-icon">➕</span>
+                            Создать тест
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <span class="nav-icon">⚙️</span>
+                            Настройки
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar">ИИ</div>
+                    <div class="user-details">
+                        <div class="user-name">Иван Иванов</div>
+                        <div class="user-email">ivan@email.com</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <div class="header-top">
+                    <div>
+                        <h1>Мои тесты</h1>
+                        <p class="header-subtitle">Управляйте своими тестами и отслеживайте результаты</p>
+                    </div>
+                    <a href="create-test.html" class="btn-primary">
+                        <span>➕</span> Создать тест
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat-card highlight">
+                    <div class="stat-label">Всего тестов</div>
+                    <div class="stat-value">12</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Опубликовано</div>
+                    <div class="stat-value">8</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Прохождений</div>
+                    <div class="stat-value">247</div>
+                </div>
+            </div>
+
+            <!-- Tests -->
+            <div class="tests-header">
+                <h2>Все тесты</h2>
+                <div class="filter-tabs">
+                    <button class="filter-tab active">Все</button>
+                    <button class="filter-tab">Опубликованные</button>
+                    <button class="filter-tab">Черновики</button>
+                </div>
+            </div>
+
+            <div class="tests-grid">
+                <div class="test-card">
+                    <div class="test-title">Основы JavaScript</div>
+                    <div class="test-meta">
+                        <span class="test-meta-item">📝 15 вопросов</span>
+                        <span class="test-meta-item">👥 48 прохождений</span>
+                    </div>
+                    <div class="test-footer">
+                        <span class="test-status published">Опубликован</span>
+                        <div class="test-actions">
+                            <a href="statistics.html" class="icon-btn" title="Статистика">📊</a>
+                            <button class="icon-btn" title="Редактировать">✏️</button>
+                            <button class="icon-btn delete" title="Удалить">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="test-card">
+                    <div class="test-title">HTML & CSS для начинающих</div>
+                    <div class="test-meta">
+                        <span class="test-meta-item">📝 20 вопросов</span>
+                        <span class="test-meta-item">👥 92 прохождений</span>
+                    </div>
+                    <div class="test-footer">
+                        <span class="test-status published">Опубликован</span>
+                        <div class="test-actions">
+                            <a href="statistics.html" class="icon-btn" title="Статистика">📊</a>
+                            <button class="icon-btn" title="Редактировать">✏️</button>
+                            <button class="icon-btn delete" title="Удалить">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="test-card">
+                    <div class="test-title">Python: Работа со списками</div>
+                    <div class="test-meta">
+                        <span class="test-meta-item">📝 10 вопросов</span>
+                        <span class="test-meta-item">👥 0 прохождений</span>
+                    </div>
+                    <div class="test-footer">
+                        <span class="test-status draft">Черновик</span>
+                        <div class="test-actions">
+                            <button class="icon-btn" title="Статистика">📊</button>
+                            <button class="icon-btn" title="Редактировать">✏️</button>
+                            <button class="icon-btn delete" title="Удалить">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="test-card">
+                    <div class="test-title">React: Основные концепции</div>
+                    <div class="test-meta">
+                        <span class="test-meta-item">📝 12 вопросов</span>
+                        <span class="test-meta-item">👥 35 прохождений</span>
+                    </div>
+                    <div class="test-footer">
+                        <span class="test-status published">Опубликован</span>
+                        <div class="test-actions">
+                            <a href="statistics.html" class="icon-btn" title="Статистика">📊</a>
+                            <button class="icon-btn" title="Редактировать">✏️</button>
+                            <button class="icon-btn delete" title="Удалить">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/sidebar.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>

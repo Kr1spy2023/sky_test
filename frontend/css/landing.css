@@ -1,0 +1,67 @@
+/* Landing Page Styles */
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: var(--spacing-4xl) var(--spacing-3xl);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero h1 {
+    font-size: var(--font-size-5xl);
+    font-weight: 800;
+    margin-bottom: var(--spacing-xl);
+    letter-spacing: -2px;
+    line-height: 1.15;
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero p {
+    font-size: var(--font-size-xl);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-3xl);
+    line-height: 1.7;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: var(--spacing-lg);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.hero-buttons .btn-primary,
+.hero-buttons .btn-secondary {
+    padding: 14px 32px;
+    font-size: var(--font-size-lg);
+}
+
+/* Features Section */
+.features {
+    padding: var(--spacing-4xl) var(--spacing-3xl);
+    background: var(--bg-secondary);
+}
+
+.features-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--spacing-3xl);
+}
+
+/* Footer */
+footer {
+    padding: var(--spacing-2xl) var(--spacing-3xl);
+    text-align: center;
+    border-top: 1px solid var(--border);
+    color: var(--text-tertiary);
+    font-size: var(--font-size-sm);
+}

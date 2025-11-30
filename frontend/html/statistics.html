@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Test - Статистика теста</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/buttons.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/cards.css">
+    <link rel="stylesheet" href="../css/results.css">
+    <link rel="stylesheet" href="../css/statistics.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">Sky Test</div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">📝</span>
+                            Мои тесты
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="create-test.html" class="nav-link">
+                            <span class="nav-icon">➕</span>
+                            Создать тест
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <span class="nav-icon">⚙️</span>
+                            Настройки
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-avatar">ИИ</div>
+                    <div class="user-details">
+                        <div class="user-name">Иван Иванов</div>
+                        <div class="user-email">ivan@email.com</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+        <!-- Test Info -->
+        <div class="test-info-card">
+            <div class="test-header">
+                <div>
+                    <h1 class="test-title" id="statisticsTitle">Основы JavaScript</h1>
+                    <p class="test-meta">20 вопросов • Создан 15 октября 2025</p>
+                </div>
+                <div class="test-actions">
+                    <a href="create-test.html" class="btn-secondary">✏️ Редактировать</a>
+                    <button class="btn-primary" id="shareBtn">🔗 Поделиться</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-overview">
+            <div class="stat-card highlight">
+                <div class="stat-label">Всего попыток</div>
+                <div class="stat-value" id="totalAttempts">24</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Средний балл</div>
+                <div class="stat-value" id="averageScore">78%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Лучший результат</div>
+                <div class="stat-value" id="bestScore">95%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Среднее время</div>
+                <div class="stat-value" id="averageTime">14м</div>
+            </div>
+        </div>
+
+        <!-- Results Table -->
+        <div class="results-section">
+            <div class="section-header">
+                <h2 class="section-title">Результаты прохождения</h2>
+                <div class="filter-tabs">
+                    <button class="filter-tab active">Все</button>
+                    <button class="filter-tab">Отлично</button>
+                    <button class="filter-tab">Хорошо</button>
+                    <button class="filter-tab">Удовлетворительно</button>
+                </div>
+            </div>
+
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Студент</th>
+                        <th>Результат</th>
+                        <th>Правильных ответов</th>
+                        <th>Время</th>
+                        <th>Дата</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="resultsTableBody">
+                    <!-- Results will be added here -->
+                </tbody>
+            </table>
+        </div>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/sidebar.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/statistics.js"></script>
+</body>
+</html>
