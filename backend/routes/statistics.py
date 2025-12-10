@@ -66,6 +66,12 @@ def test_attempts(user_id, test_id):
     skip = request.args.get('skip', 0, type=int)
     limit = request.args.get('limit', 20, type=int)
 
+    # Валидация пагинации
+    if skip < 0:
+        return error_response('skip должен быть >= 0', 400)
+    if limit < 1 or limit > 100:
+        return error_response('limit должен быть от 1 до 100', 400)
+
     try:
         attempts = get_test_attempts(test_id, user_id, skip, limit)
         return success_response(attempts)

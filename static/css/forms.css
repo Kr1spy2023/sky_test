@@ -1,0 +1,111 @@
+/* ============================================
+   FORMS.CSS - Стили для форм создания тестов
+   ============================================ */
+
+.form-card {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 32px;
+}
+
+.form-section {
+    margin-bottom: 32px;
+}
+
+.form-section:last-child {
+    margin-bottom: 0;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #1a1a1a;
+}
+
+/* Questions */
+.questions-list {
+    margin-top: 24px;
+}
+
+.question-card {
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 16px;
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.question-number {
+    font-weight: 600;
+    color: #3b82f6;
+    font-size: 14px;
+}
+
+.question-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Answers */
+.answers-list {
+    margin-top: 12px;
+}
+
+.answer-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.answer-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #3b82f6;
+}
+
+.answer-input {
+    flex: 1;
+}
+
+.answer-delete {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #999;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.answer-delete:hover {
+    background: #fee;
+    color: #dc2626;
+}
+
+.btn-add-question {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    justify-content: center;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid #e5e5e5;
+}

@@ -1,0 +1,42 @@
+<aside class="sidebar">
+    <div class="logo">Sky Test</div>
+
+    <nav>
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="{{ url_for('views.dashboard') }}" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">
+                    <span class="nav-icon">📝</span>
+                    Мои тесты
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('views.create_test') }}" class="nav-link {% if active_page == 'create_test' %}active{% endif %}">
+                    <span class="nav-icon">➕</span>
+                    Создать тест
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('views.settings') }}" class="nav-link {% if active_page == 'settings' %}active{% endif %}">
+                    <span class="nav-icon">⚙️</span>
+                    Настройки
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url_for('views.logout') }}" class="nav-link">
+                    <span class="nav-icon">🚪</span>
+                    Выйти
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="user-section">
+        <div class="user-info">
+            <div class="user-avatar">{{ user.name[0].upper() }}</div>
+            <div class="user-details">
+                <div class="user-name">{{ user.name }}</div>
+                <div class="user-email">{{ user.email }}</div>
+            </div>
+        </div>
+    </div>
+</aside>

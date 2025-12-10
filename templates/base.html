@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sky Test{% endblock %}</title>
+
+    <!-- Базовые стили для всех страниц -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    <!-- Дополнительные стили для конкретных страниц -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Flash сообщения -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        <span>
+                            {% if category == 'success' %}✓{% endif %}
+                            {% if category == 'error' %}✕{% endif %}
+                            {% if category == 'warning' %}⚠{% endif %}
+                            {% if category == 'info' %}ℹ{% endif %}
+                        </span>
+                        <span>{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Основной контент страницы -->
+    {% block content %}{% endblock %}
+
+    <!-- JavaScript для всех страниц -->
+    <script src="{{ url_for('static', filename='js/interactions.js') }}"></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

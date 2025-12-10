@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Test - Создание теста</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            background: #fafafa;
+            color: #1a1a1a;
+        }
+        
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid #e5e5e5;
+            padding: 32px 0;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: #3b82f6;
+            padding: 0 24px;
+            margin-bottom: 40px;
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-menu {
+            list-style: none;
+        }
+        
+        .nav-item {
+            margin-bottom: 4px;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+        
+        .nav-link:hover {
+            background: #f5f5f5;
+            color: #1a1a1a;
+        }
+        
+        .nav-link.active {
+            background: #f0f7ff;
+            color: #3b82f6;
+            font-weight: 500;
+        }
+        
+        .nav-icon {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 48px;
+            max-width: 900px;
+        }
+        
+        .header {
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header-subtitle {
+            color: #666;
+            font-size: 15px;
+        }
+        
+        /* Form */
+        .form-card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 32px;
+        }
+        
+        .form-section {
+            margin-bottom: 32px;
+        }
+        
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+        
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        /* Questions */
+        .questions-list {
+            margin-top: 24px;
+        }
+        
+        .question-card {
+            background: #fafafa;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .question-number {
+            font-weight: 600;
+            color: #3b82f6;
+            font-size: 14px;
+        }
+        
+        .question-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        
+        .icon-btn:hover {
+            background: #f5f5f5;
+            border-color: #ccc;
+        }
+        
+        .icon-btn.delete:hover {
+            background: #fee;
+            border-color: #fcc;
+        }
+        
+        .answers-list {
+            margin-top: 12px;
+        }
+        
+        .answer-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .answer-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #3b82f6;
+        }
+        
+        .answer-input {
+            flex: 1;
+        }
+        
+        .answer-delete {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            color: #999;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .answer-delete:hover {
+            background: #fee;
+            color: #dc2626;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #3b82f6;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            border: 1px solid #3b82f6;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0f7ff;
+        }
+        
+        .btn-add-question {
+            width: 100%;
+            margin-top: 16px;
+            padding: 14px;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid #e5e5e5;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: #666;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            border: 1px solid #e5e5e5;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-outline:hover {
+            background: #f5f5f5;
+            border-color: #ccc;
+        }
+        
+        .helper-text {
+            font-size: 13px;
+            color: #999;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">Sky Test</div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="04-dashboard.html" class="nav-link">
+                            <span class="nav-icon">📝</span>
+                            Мои тесты
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <span class="nav-icon">➕</span>
+                            Создать тест
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            Статистика
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <span class="nav-icon">⚙️</span>
+                            Настройки
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Создание нового теста</h1>
+                <p class="header-subtitle">Заполните информацию о тесте и добавьте вопросы</p>
+            </div>
+            
+            <div class="form-card">
+                <!-- Test Info -->
+                <div class="form-section">
+                    <h2 class="section-title">Основная информация</h2>
+                    
+                    <div class="form-group">
+                        <label for="test-title">Название теста</label>
+                        <input type="text" id="test-title" placeholder="Например: Основы программирования">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="test-description">Описание</label>
+                        <textarea id="test-description" placeholder="Краткое описание теста и его содержания"></textarea>
+                        <p class="helper-text">Это поможет студентам понять, о чём тест</p>
+                    </div>
+                </div>
+                
+                <!-- Questions -->
+                <div class="form-section">
+                    <h2 class="section-title">Вопросы</h2>
+                    
+                    <div class="questions-list">
+                        <!-- Question 1 -->
+                        <div class="question-card">
+                            <div class="question-header">
+                                <span class="question-number">Вопрос 1</span>
+                                <div class="question-actions">
+                                    <button class="icon-btn" title="Переместить вверх">↑</button>
+                                    <button class="icon-btn" title="Переместить вниз">↓</button>
+                                    <button class="icon-btn delete" title="Удалить">🗑️</button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Текст вопроса</label>
+                                <input type="text" placeholder="Введите текст вопроса">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Варианты ответов (отметьте правильный)</label>
+                                <div class="answers-list">
+                                    <div class="answer-item">
+                                        <input type="checkbox" class="answer-checkbox">
+                                        <input type="text" class="answer-input" placeholder="Вариант ответа 1">
+                                        <button class="answer-delete">✕</button>
+                                    </div>
+                                    <div class="answer-item">
+                                        <input type="checkbox" class="answer-checkbox">
+                                        <input type="text" class="answer-input" placeholder="Вариант ответа 2">
+                                        <button class="answer-delete">✕</button>
+                                    </div>
+                                    <div class="answer-item">
+                                        <input type="checkbox" class="answer-checkbox">
+                                        <input type="text" class="answer-input" placeholder="Вариант ответа 3">
+                                        <button class="answer-delete">✕</button>
+                                    </div>
+                                </div>
+                                <button class="btn-secondary" style="margin-top: 12px;">
+                                    ➕ Добавить вариант
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Question 2 -->
+                        <div class="question-card">
+                            <div class="question-header">
+                                <span class="question-number">Вопрос 2</span>
+                                <div class="question-actions">
+                                    <button class="icon-btn" title="Переместить вверх">↑</button>
+                                    <button class="icon-btn" title="Переместить вниз">↓</button>
+                                    <button class="icon-btn delete" title="Удалить">🗑️</button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Текст вопроса</label>
+                                <input type="text" placeholder="Введите текст вопроса">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Варианты ответов (отметьте правильный)</label>
+                                <div class="answers-list">
+                                    <div class="answer-item">
+                                        <input type="checkbox" class="answer-checkbox">
+                                        <input type="text" class="answer-input" placeholder="Вариант ответа 1">
+                                        <button class="answer-delete">✕</button>
+                                    </div>
+                                    <div class="answer-item">
+                                        <input type="checkbox" class="answer-checkbox">
+                                        <input type="text" class="answer-input" placeholder="Вариант ответа 2">
+                                        <button class="answer-delete">✕</button>
+                                    </div>
+                                </div>
+                                <button class="btn-secondary" style="margin-top: 12px;">
+                                    ➕ Добавить вариант
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-secondary btn-add-question">
+                        ➕ Добавить вопрос
+                    </button>
+                </div>
+                
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button class="btn-primary">Опубликовать тест</button>
+                    <button class="btn-outline">Сохранить черновик</button>
+                    <button class="btn-outline">Отмена</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

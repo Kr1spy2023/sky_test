@@ -1,0 +1,239 @@
+/* ============================================
+   TEST.CSS - Стили для прохождения тестов
+   ============================================ */
+
+body.test-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+.test-header {
+    background: white;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 20px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.test-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.exit-btn {
+    background: transparent;
+    color: #666;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    border: 1px solid #e5e5e5;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.exit-btn:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
+}
+
+/* Progress Bar */
+.progress-section {
+    background: white;
+    padding: 24px 48px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.question-counter {
+    font-size: 14px;
+    color: #666;
+}
+
+.question-counter strong {
+    color: #3b82f6;
+    font-weight: 600;
+}
+
+.time-remaining {
+    font-size: 14px;
+    color: #666;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+    transition: width 0.3s ease;
+    border-radius: 4px;
+}
+
+/* Test Content */
+.test-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 48px;
+}
+
+.question-container {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    padding: 48px;
+    max-width: 700px;
+    width: 100%;
+}
+
+.question-text {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 32px;
+    line-height: 1.4;
+    color: #1a1a1a;
+}
+
+.answers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.answer-option {
+    background: #fafafa;
+    border: 2px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 20px 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.answer-option:hover {
+    background: #f0f7ff;
+    border-color: #3b82f6;
+}
+
+.answer-option.selected {
+    background: #f0f7ff;
+    border-color: #3b82f6;
+}
+
+.answer-radio {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.answer-option:hover .answer-radio {
+    border-color: #3b82f6;
+}
+
+.answer-option.selected .answer-radio {
+    border-color: #3b82f6;
+    background: #3b82f6;
+}
+
+.answer-option.selected .answer-radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+}
+
+.answer-text {
+    font-size: 16px;
+    color: #1a1a1a;
+    line-height: 1.5;
+}
+
+.question-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.question-actions .btn-secondary {
+    padding: 14px 28px;
+}
+
+.question-actions .btn-primary {
+    padding: 14px 32px;
+}
+
+.btn-secondary:disabled,
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Navigation Dots */
+.question-nav {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.nav-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #e5e5e5;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-dot:hover {
+    background: #ccc;
+}
+
+.nav-dot.completed {
+    background: #3b82f6;
+}
+
+.nav-dot.current {
+    background: #3b82f6;
+    transform: scale(1.3);
+}
+
+/* Question Slide */
+.question-slide {
+    display: none;
+}
+
+.question-slide.active {
+    display: block;
+}

@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}Создание теста - Sky Test{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+<style>
+    .dashboard {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .main-content {
+        flex: 1;
+        padding: 48px;
+        max-width: 900px;
+    }
+
+    .header {
+        margin-bottom: 40px;
+    }
+
+    .header h1 {
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+    }
+
+    .header-subtitle {
+        color: #666;
+        font-size: 15px;
+    }
+
+    .form-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+        padding: 32px;
+    }
+
+    .form-section {
+        margin-bottom: 32px;
+    }
+
+    .form-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #1a1a1a;
+    }
+
+    .questions-list {
+        margin-top: 24px;
+    }
+
+    .btn-add-question {
+        width: 100%;
+        margin-top: 16px;
+        padding: 14px;
+        justify-content: center;
+    }
+
+    .helper-text {
+        font-size: 13px;
+        color: #999;
+        margin-top: 6px;
+    }
+</style>
+{% endblock %}
+
+{% block body_class %}dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    {% include '_sidebar.html' %}
+
+    <main class="main-content">
+        <div class="header">
+            <h1>Создание нового теста</h1>
+            <p class="header-subtitle">Заполните информацию о тесте и добавьте вопросы</p>
+        </div>
+
+        <form method="POST" class="form-card">
+            <div class="form-section">
+                <h2 class="section-title">Основная информация</h2>
+
+                <div class="form-group">
+                    <label for="test-title">Название теста</label>
+                    <input type="text" id="test-title" name="title" placeholder="Например: Основы программирования" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="test-description">Описание</label>
+                    <textarea id="test-description" name="description" placeholder="Краткое описание теста и его содержания"></textarea>
+                    <p class="helper-text">Это поможет студентам понять, о чём тест</p>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="section-title">Вопросы</h2>
+
+                <div class="questions-list" id="questions-list">
+                    <div class="question-card" data-question-index="0">
+                        <div class="question-header">
+                            <span class="question-number">Вопрос 1</span>
+                            <div class="question-actions">
+                                <button type="button" class="icon-btn" onclick="moveQuestion(0, 'up')" title="Переместить вверх">↑</button>
+                                <button type="button" class="icon-btn" onclick="moveQuestion(0, 'down')" title="Переместить вниз">↓</button>
+                                <button type="button" class="icon-btn delete" onclick="removeQuestion(0)" title="Удалить">🗑️</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Текст вопроса</label>
+                            <input type="text" name="questions[0][text]" placeholder="Введите текст вопроса" required>
+                        </div>
+
+                        <input type="hidden" name="questions[0][type]" value="single">
+
+                        <div class="form-group">
+                            <label>Варианты ответов (отметьте правильный)</label>
+                            <div class="answers-list" data-question="0">
+                                <div class="answer-item">
+                                    <input type="checkbox" class="answer-checkbox" name="questions[0][options][0][correct]" value="1">
+                                    <input type="text" class="answer-input" name="questions[0][options][0][text]" placeholder="Вариант ответа 1" required>
+                                    <button type="button" class="answer-delete" onclick="removeAnswer(this)">✕</button>
+                                </div>
+                                <div class="answer-item">
+                                    <input type="checkbox" class="answer-checkbox" name="questions[0][options][1][correct]" value="1">
+                                    <input type="text" class="answer-input" name="questions[0][options][1][text]" placeholder="Вариант ответа 2" required>
+                                    <button type="button" class="answer-delete" onclick="removeAnswer(this)">✕</button>
+                                </div>
+                                <div class="answer-item">
+                                    <input type="checkbox" class="answer-checkbox" name="questions[0][options][2][correct]" value="1">
+                                    <input type="text" class="answer-input" name="questions[0][options][2][text]" placeholder="Вариант ответа 3" required>
+                                    <button type="button" class="answer-delete" onclick="removeAnswer(this)">✕</button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn-secondary" style="margin-top: 12px;" onclick="addAnswer(0)">
+                                ➕ Добавить вариант
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-secondary btn-add-question" onclick="addQuestion()">
+                    ➕ Добавить вопрос
+                </button>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" name="action" value="publish" class="btn-primary">Опубликовать тест</button>
+                <button type="submit" name="action" value="draft" class="btn-outline">Сохранить черновик</button>
+                <a href="{{ url_for('views.dashboard') }}" class="btn-outline">Отмена</a>
+            </div>
+        </form>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/create-test.js') }}"></script>
+{% endblock %}

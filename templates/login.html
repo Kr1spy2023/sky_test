@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Sky Test - Вход{% endblock %}
+
+{% block body_class %}auth-page{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .login-container {
+        background: white;
+        padding: 48px;
+        border-radius: 16px;
+        border: 1px solid #e5e5e5;
+        width: 100%;
+        max-width: 420px;
+    }
+
+    .logo {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 600;
+        color: #3b82f6;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 40px;
+        font-size: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1a1a1a;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: border-color 0.2s;
+        font-family: inherit;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #3b82f6;
+    }
+
+    .btn-primary {
+        width: 100%;
+        background: #3b82f6;
+        color: white;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-top: 8px;
+    }
+
+    .btn-primary:hover {
+        background: #2563eb;
+    }
+
+    .divider {
+        text-align: center;
+        margin: 32px 0;
+        color: #999;
+        font-size: 14px;
+        position: relative;
+    }
+
+    .divider::before,
+    .divider::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 40%;
+        height: 1px;
+        background: #e5e5e5;
+    }
+
+    .divider::before {
+        left: 0;
+    }
+
+    .divider::after {
+        right: 0;
+    }
+
+    .signup-link {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .signup-link a {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .signup-link a:hover {
+        text-decoration: underline;
+    }
+
+    .back-home {
+        text-align: center;
+        margin-top: 24px;
+    }
+
+    .back-home a {
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .back-home a:hover {
+        color: #1a1a1a;
+    }
+
+    .forgot-password {
+        text-align: center;
+        margin-top: 16px;
+    }
+
+    .forgot-password a {
+        color: #3b82f6;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .forgot-password a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="logo">Sky Test</div>
+    <p class="subtitle">Войдите в свой аккаунт</p>
+
+    <form method="POST" action="{{ url_for('views.login') }}">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" placeholder="Введите пароль" required>
+        </div>
+
+        <button type="submit" class="btn-primary">Войти</button>
+
+        <div class="forgot-password">
+            <a href="#">Забыли пароль?</a>
+        </div>
+    </form>
+
+    <div class="divider">или</div>
+
+    <div class="signup-link">
+        Нет аккаунта? <a href="{{ url_for('views.register') }}">Зарегистрироваться</a>
+    </div>
+
+    <div class="back-home">
+        <a href="{{ url_for('views.index') }}">← На главную</a>
+    </div>
+</div>
+{% endblock %}

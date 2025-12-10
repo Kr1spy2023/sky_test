@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}Настройки - Sky Test{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<style>
+    .dashboard {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .main-content {
+        flex: 1;
+        padding: 48px;
+        max-width: 800px;
+    }
+
+    .header {
+        margin-bottom: 40px;
+    }
+
+    .header h1 {
+        font-size: 32px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+    }
+
+    .header-subtitle {
+        color: #666;
+        font-size: 15px;
+    }
+
+    .settings-section {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+        padding: 32px;
+        margin-bottom: 24px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 24px;
+        color: #1a1a1a;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1a1a1a;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: border-color 0.2s;
+        font-family: inherit;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #3b82f6;
+    }
+
+    .form-actions {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #f0f0f0;
+        display: flex;
+        gap: 12px;
+    }
+
+    .helper-text {
+        font-size: 13px;
+        color: #999;
+        margin-top: 6px;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 24px;
+    }
+</style>
+{% endblock %}
+
+{% block body_class %}dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    {% include '_sidebar.html' %}
+
+    <main class="main-content">
+        <div class="header">
+            <h1>Настройки</h1>
+            <p class="header-subtitle">Управление профилем и безопасностью</p>
+        </div>
+
+        <div class="settings-section">
+            <h2 class="section-title">Профиль</h2>
+
+            <div class="profile-avatar">{{ user.name[0].upper() }}</div>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label for="name">Имя пользователя</label>
+                    <input type="text" id="name" name="name" value="{{ user.name }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                    <p class="helper-text">Используется для входа в систему</p>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Сохранить изменения</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="settings-section">
+            <h2 class="section-title">Безопасность</h2>
+
+            <form method="POST">
+                <input type="hidden" name="action" value="change_password">
+
+                <div class="form-group">
+                    <label for="current_password">Текущий пароль</label>
+                    <input type="password" id="current_password" name="current_password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="new_password">Новый пароль</label>
+                    <input type="password" id="new_password" name="new_password" required>
+                    <p class="helper-text">Минимум 6 символов</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Подтвердите новый пароль</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Изменить пароль</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="settings-section">
+            <h2 class="section-title">Статистика аккаунта</h2>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                <div style="text-align: center; padding: 20px; background: #fafafa; border-radius: 8px;">
+                    <div style="font-size: 28px; font-weight: 600; color: #3b82f6; margin-bottom: 8px;">
+                        {{ user.tests|length }}
+                    </div>
+                    <div style="font-size: 14px; color: #666;">Создано тестов</div>
+                </div>
+                <div style="text-align: center; padding: 20px; background: #fafafa; border-radius: 8px;">
+                    <div style="font-size: 28px; font-weight: 600; color: #22c55e; margin-bottom: 8px;">
+                        {{ user.tests|selectattr('is_published')|list|length }}
+                    </div>
+                    <div style="font-size: 14px; color: #666;">Опубликовано</div>
+                </div>
+                <div style="text-align: center; padding: 20px; background: #fafafa; border-radius: 8px;">
+                    <div style="font-size: 28px; font-weight: 600; color: #f59e0b; margin-bottom: 8px;">
+                        {{ user.attempts|length }}
+                    </div>
+                    <div style="font-size: 14px; color: #666;">Пройдено тестов</div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

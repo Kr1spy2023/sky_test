@@ -5,11 +5,11 @@ class TestAttempt(db.Model):
     __tablename__ = 'test_attempts'
 
     id = db.Column(db.Integer, primary_key=True)
-    test_id = db.Column(db.Integer, db.ForeignKey('tests.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    test_id = db.Column(db.Integer, db.ForeignKey('tests.id'), nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
     score = db.Column(db.Float, nullable=True)
     started_at = db.Column(db.DateTime, default=datetime.utcnow)
-    finished_at = db.Column(db.DateTime, nullable=True)
+    finished_at = db.Column(db.DateTime, nullable=True, index=True)
 
     answers = db.relationship('Answer', backref='attempt', lazy=True, cascade='all, delete-orphan')
 

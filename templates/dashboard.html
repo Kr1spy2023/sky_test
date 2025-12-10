@@ -1,0 +1,394 @@
+{% extends "base.html" %}
+
+{% block title %}Sky Test - Мои тесты{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 260px;
+        background: white;
+        border-right: 1px solid #e5e5e5;
+        padding: 32px 0;
+        position: relative;
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: 600;
+        color: #3b82f6;
+        padding: 0 24px;
+        margin-bottom: 40px;
+        letter-spacing: -0.5px;
+    }
+
+    .nav-menu {
+        list-style: none;
+    }
+
+    .nav-item {
+        margin-bottom: 4px;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 12px 24px;
+        color: #666;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-size: 15px;
+    }
+
+    .nav-link:hover {
+        background: #f5f5f5;
+        color: #1a1a1a;
+    }
+
+    .nav-link.active {
+        background: #f0f7ff;
+        color: #3b82f6;
+        font-weight: 500;
+    }
+
+    .nav-icon {
+        margin-right: 12px;
+        font-size: 18px;
+    }
+
+    .user-section {
+        position: absolute;
+        bottom: 32px;
+        left: 24px;
+        right: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #e5e5e5;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+        background: #3b82f6;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .user-details {
+        flex: 1;
+    }
+
+    .user-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: #1a1a1a;
+    }
+
+    .user-email {
+        font-size: 12px;
+        color: #999;
+    }
+
+    /* Main Content */
+    .main-content {
+        flex: 1;
+        padding: 48px;
+    }
+
+    .header {
+        margin-bottom: 40px;
+    }
+
+    .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .header h1 {
+        font-size: 32px;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+    }
+
+    .btn-primary {
+        background: #3b82f6;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-primary:hover {
+        background: #2563eb;
+    }
+
+    .header-subtitle {
+        color: #666;
+        font-size: 15px;
+    }
+
+    /* Stats */
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #e5e5e5;
+    }
+
+    .stat-label {
+        color: #999;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        font-size: 32px;
+        font-weight: 600;
+        color: #1a1a1a;
+    }
+
+    /* Tests Grid */
+    .tests-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .tests-header h2 {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .tests-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 24px;
+    }
+
+    .test-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+        padding: 24px;
+        transition: all 0.2s;
+    }
+
+    .test-card:hover {
+        border-color: #3b82f6;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+    }
+
+    .test-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #1a1a1a;
+    }
+
+    .test-meta {
+        display: flex;
+        gap: 16px;
+        color: #999;
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+
+    .test-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .test-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 16px;
+        border-top: 1px solid #f5f5f5;
+    }
+
+    .test-status {
+        font-size: 13px;
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    .test-status.published {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .test-status.draft {
+        background: #f3f4f6;
+        color: #666;
+    }
+
+    .test-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .icon-btn {
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: #f5f5f5;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .icon-btn:hover {
+        background: #e5e5e5;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        color: #999;
+    }
+
+    .empty-state-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    {% include '_sidebar.html' %}
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <div class="header-top">
+                <div>
+                    <h1>Мои тесты</h1>
+                    <p class="header-subtitle">Управляйте своими тестами и отслеживайте результаты</p>
+                </div>
+                <a href="{{ url_for('views.create_test') }}" class="btn-primary">
+                    <span>+</span> Создать тест
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Всего тестов</div>
+                <div class="stat-value">{{ stats.total }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Опубликовано</div>
+                <div class="stat-value">{{ stats.published }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Прохождений</div>
+                <div class="stat-value">{{ stats.attempts }}</div>
+            </div>
+        </div>
+
+        <!-- Tests -->
+        <div class="tests-header">
+            <h2>Все тесты</h2>
+        </div>
+
+        {% if tests %}
+        <div class="tests-grid">
+            {% for test in tests %}
+            <div class="test-card">
+                <div class="test-title">{{ test.title }}</div>
+                <div class="test-meta">
+                    <span class="test-meta-item">📝 {{ test.questions_count }} вопросов</span>
+                    <span class="test-meta-item">👥 {{ test.attempts_count }} прохождений</span>
+                </div>
+                <div class="test-footer">
+                    <span class="test-status {{ 'published' if test.is_published else 'draft' }}">
+                        {{ 'Опубликован' if test.is_published else 'Черновик' }}
+                    </span>
+                    <div class="test-actions">
+                        {% if test.is_published %}
+                        <a href="{{ url_for('views.statistics', test_id=test.id) }}" class="icon-btn" title="Статистика">📊</a>
+                        <button onclick="copyTestLink('{{ test.link_token }}')" class="icon-btn" title="Скопировать ссылку">🔗</button>
+                        {% endif %}
+                        <a href="{{ url_for('views.edit_test', test_id=test.id) }}" class="icon-btn" title="Редактировать">✏️</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <h3>У вас пока нет тестов</h3>
+            <p>Создайте свой первый тест, чтобы начать работу</p>
+            <a href="{{ url_for('views.create_test') }}" class="btn-primary">Создать тест</a>
+        </div>
+        {% endif %}
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyTestLink(linkToken) {
+    const link = window.location.origin + "{{ url_for('views.take_test', link_token='TOKEN') }}".replace('TOKEN', linkToken);
+    navigator.clipboard.writeText(link).then(() => {
+        alert('Ссылка скопирована в буфер обмена!');
+    });
+}
+</script>
+{% endblock %}

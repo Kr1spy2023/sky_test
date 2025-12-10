@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block title %}Результат теста - Sky Test{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #fafafa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 48px 24px;
+    }
+
+    .result-container {
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .result-card {
+        background: white;
+        border: 1px solid #e5e5e5;
+        border-radius: 16px;
+        padding: 48px 32px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .result-icon {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 0 auto 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        font-weight: 700;
+        color: white;
+        position: relative;
+    }
+
+    .result-icon.excellent {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    }
+
+    .result-icon.good {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    }
+
+    .result-icon.average {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+
+    .result-icon.poor {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+
+    .result-title {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #1a1a1a;
+    }
+
+    .result-subtitle {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 32px;
+    }
+
+    .result-details {
+        background: #fafafa;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 32px;
+    }
+
+    .result-stat {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 8px;
+    }
+
+    .result-stat strong {
+        color: #1a1a1a;
+        font-weight: 600;
+    }
+
+    .result-stat:last-child {
+        margin-bottom: 0;
+    }
+
+    .result-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .btn-primary {
+        background: #3b82f6;
+        color: white;
+        padding: 14px 32px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: inline-block;
+    }
+
+    .btn-primary:hover {
+        background: #2563eb;
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: #666;
+        padding: 14px 32px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 15px;
+        border: 1px solid #e5e5e5;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-block;
+    }
+
+    .btn-secondary:hover {
+        background: #f5f5f5;
+        border-color: #ccc;
+    }
+
+    .test-info {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #e5e5e5;
+    }
+
+    .test-name {
+        font-size: 14px;
+        color: #999;
+        margin-bottom: 4px;
+    }
+
+    .test-title-text {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a1a1a;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="result-container">
+    <div class="result-card">
+        {% if attempt.score >= 80 %}
+            <div class="result-icon excellent">{{ attempt.score|int }}%</div>
+            <h1 class="result-title">Отлично!</h1>
+            <p class="result-subtitle">Вы успешно прошли тест</p>
+        {% elif attempt.score >= 60 %}
+            <div class="result-icon good">{{ attempt.score|int }}%</div>
+            <h1 class="result-title">Хорошо!</h1>
+            <p class="result-subtitle">Неплохой результат</p>
+        {% elif attempt.score >= 40 %}
+            <div class="result-icon average">{{ attempt.score|int }}%</div>
+            <h1 class="result-title">Удовлетворительно</h1>
+            <p class="result-subtitle">Есть к чему стремиться</p>
+        {% else %}
+            <div class="result-icon poor">{{ attempt.score|int }}%</div>
+            <h1 class="result-title">Попробуйте ещё раз</h1>
+            <p class="result-subtitle">Не расстраивайтесь!</p>
+        {% endif %}
+
+        <div class="result-details">
+            <div class="result-stat">
+                Правильных ответов: <strong>{{ correct_count }} из {{ total_questions }}</strong>
+            </div>
+        </div>
+
+        <div class="test-info">
+            <div class="test-name">Тест</div>
+            <div class="test-title-text">{{ test.title }}</div>
+        </div>
+
+        <div class="result-actions">
+            {% if session.user_id %}
+            <a href="{{ url_for('views.dashboard') }}" class="btn-primary">Вернуться к тестам</a>
+            {% else %}
+            <a href="{{ url_for('views.index') }}" class="btn-primary">На главную</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

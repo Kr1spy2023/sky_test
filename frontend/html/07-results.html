@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Test - Результаты теста</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            background: #fafafa;
+            color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .test-header {
+            background: white;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 20px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+            color: #3b82f6;
+            letter-spacing: -0.5px;
+        }
+        
+        .btn-home {
+            background: #3b82f6;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .btn-home:hover {
+            background: #2563eb;
+        }
+        
+        /* Main Content */
+        .results-content {
+            flex: 1;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* Score Card */
+        .score-card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 48px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        
+        .score-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+        
+        .test-name {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+        
+        .score-display {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            position: relative;
+        }
+        
+        .score-display::after {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border-radius: 50%;
+            background: white;
+            z-index: -1;
+        }
+        
+        .score-details {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-bottom: 32px;
+        }
+        
+        .score-stat {
+            text-align: center;
+        }
+        
+        .score-stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        
+        .score-stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .score-stat.correct .score-stat-value {
+            color: #16a34a;
+        }
+        
+        .score-stat.incorrect .score-stat-value {
+            color: #dc2626;
+        }
+        
+        .score-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #3b82f6;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            border: 1px solid #3b82f6;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0f7ff;
+        }
+        
+        /* Detailed Results */
+        .detailed-results {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 32px;
+        }
+        
+        .results-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #1a1a1a;
+        }
+        
+        .question-result {
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .question-result.correct {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+        
+        .question-result.incorrect {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
+        
+        .question-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .question-number {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .result-badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .result-badge.correct {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .result-badge.incorrect {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .question-text {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+        
+        .answer-info {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .answer-info strong {
+            color: #1a1a1a;
+        }
+        
+        .correct-answer {
+            color: #166534;
+            font-weight: 500;
+        }
+        
+        .your-answer {
+            color: #991b1b;
+            font-weight: 500;
+        }
+        
+        /* Time and Date */
+        .metadata {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e5e5;
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="test-header">
+        <div class="logo">Sky Test</div>
+        <a href="04-dashboard.html" class="btn-home">На главную</a>
+    </header>
+    
+    <!-- Results Content -->
+    <main class="results-content">
+        <!-- Score Card -->
+        <div class="score-card">
+            <div class="success-icon">🎉</div>
+            <h1 class="score-title">Тест завершён!</h1>
+            <p class="test-name">Основы JavaScript</p>
+            
+            <div class="score-display">85%</div>
+            
+            <div class="score-details">
+                <div class="score-stat correct">
+                    <div class="score-stat-value">17</div>
+                    <div class="score-stat-label">Правильно</div>
+                </div>
+                <div class="score-stat incorrect">
+                    <div class="score-stat-value">3</div>
+                    <div class="score-stat-label">Неправильно</div>
+                </div>
+                <div class="score-stat">
+                    <div class="score-stat-value">20</div>
+                    <div class="score-stat-label">Всего вопросов</div>
+                </div>
+            </div>
+            
+            <div class="score-actions">
+                <a href="06-take-test.html" class="btn-primary">Пройти заново</a>
+                <a href="04-dashboard.html" class="btn-secondary">Вернуться к тестам</a>
+            </div>
+            
+            <div class="metadata">
+                <span>📅 31 октября 2025</span>
+                <span>⏱️ Время: 12 минут 34 секунды</span>
+            </div>
+        </div>
+        
+        <!-- Detailed Results -->
+        <div class="detailed-results">
+            <h2 class="results-header">Детальные результаты</h2>
+            
+            <div class="question-result correct">
+                <div class="question-result-header">
+                    <span class="question-number">Вопрос 1</span>
+                    <span class="result-badge correct">✓ Правильно</span>
+                </div>
+                <div class="question-text">
+                    Что такое переменная в JavaScript?
+                </div>
+                <div class="answer-info">
+                    <strong>Ваш ответ:</strong> <span class="correct-answer">Контейнер для хранения данных</span>
+                </div>
+            </div>
+            
+            <div class="question-result incorrect">
+                <div class="question-result-header">
+                    <span class="question-number">Вопрос 2</span>
+                    <span class="result-badge incorrect">✗ Неправильно</span>
+                </div>
+                <div class="question-text">
+                    Какой из следующих методов используется для добавления элемента в конец массива?
+                </div>
+                <div class="answer-info">
+                    <strong>Ваш ответ:</strong> <span class="your-answer">array.add()</span><br>
+                    <strong>Правильный ответ:</strong> <span class="correct-answer">array.push()</span>
+                </div>
+            </div>
+            
+            <div class="question-result correct">
+                <div class="question-result-header">
+                    <span class="question-number">Вопрос 3</span>
+                    <span class="result-badge correct">✓ Правильно</span>
+                </div>
+                <div class="question-text">
+                    Какое ключевое слово используется для объявления константы?
+                </div>
+                <div class="answer-info">
+                    <strong>Ваш ответ:</strong> <span class="correct-answer">const</span>
+                </div>
+            </div>
+            
+            <div class="question-result correct">
+                <div class="question-result-header">
+                    <span class="question-number">Вопрос 4</span>
+                    <span class="result-badge correct">✓ Правильно</span>
+                </div>
+                <div class="question-text">
+                    Что возвращает оператор typeof null?
+                </div>
+                <div class="answer-info">
+                    <strong>Ваш ответ:</strong> <span class="correct-answer">"object"</span>
+                </div>
+            </div>
+            
+            <div class="question-result incorrect">
+                <div class="question-result-header">
+                    <span class="question-number">Вопрос 5</span>
+                    <span class="result-badge incorrect">✗ Неправильно</span>
+                </div>
+                <div class="question-text">
+                    Какой метод используется для объединения двух массивов?
+                </div>
+                <div class="answer-info">
+                    <strong>Ваш ответ:</strong> <span class="your-answer">array.merge()</span><br>
+                    <strong>Правильный ответ:</strong> <span class="correct-answer">array.concat()</span>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

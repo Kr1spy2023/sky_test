@@ -19,11 +19,11 @@ def validate_email(email):
 
     email = email.strip()
 
-    if len(email) > 255:
-        return False, "Email слишком длинный (максимум 255 символов)"
+    if len(email) > 120:
+        return False, "Email слишком длинный (максимум 120 символов)"
 
-    # Simple email regex pattern
-    email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    # Улучшенная валидация email
+    email_pattern = r'^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9.-]*\.[a-zA-Z]{2,}$'
 
     if not re.match(email_pattern, email):
         return False, "Неверный формат email"
@@ -49,6 +49,18 @@ def validate_password(password):
 
     if len(password) > 128:
         return False, "Пароль слишком длинный (максимум 128 символов)"
+
+    # Проверка на наличие цифр
+    if not re.search(r'\d', password):
+        return False, "Пароль должен содержать хотя бы одну цифру"
+
+    # Проверка на наличие заглавных букв
+    if not re.search(r'[A-Z]', password):
+        return False, "Пароль должен содержать хотя бы одну заглавную букву"
+
+    # Проверка на наличие строчных букв
+    if not re.search(r'[a-z]', password):
+        return False, "Пароль должен содержать хотя бы одну строчную букву"
 
     return True, None
 
@@ -86,20 +98,17 @@ def validate_question_options(question_type, options, correct_answer):
     Returns:
         tuple: (is_valid, error_message)
     """
-    # For text questions, options are not required
+
     if question_type == 'text':
         return True, None
 
-    # For single/multiple choice, options are required
     if not options or not isinstance(options, list):
         return False, "Варианты ответов обязательны для вопросов с выбором"
 
     if len(options) < 2:
         return False, "Должно быть минимум 2 варианта ответа"
 
-    # Check that correct answer exists in options
     if correct_answer:
-        # For single choice, correct_answer is an index (string)
         if question_type == 'single':
             try:
                 answer_index = int(correct_answer)
