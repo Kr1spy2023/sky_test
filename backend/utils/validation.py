@@ -111,10 +111,30 @@ def validate_question_options(question_type, options, correct_answer):
     if correct_answer:
         if question_type == 'single':
             try:
-                answer_index = int(correct_answer)
+                # correct_answer может быть числом или списком с одним элементом
+                if isinstance(correct_answer, list):
+                    if len(correct_answer) != 1:
+                        return False, "Для типа 'single' должен быть выбран один правильный ответ"
+                    answer_index = int(correct_answer[0])
+                else:
+                    answer_index = int(correct_answer)
+                
                 if answer_index < 0 or answer_index >= len(options):
                     return False, "Правильный ответ вне диапазона вариантов"
-            except ValueError:
+            except (ValueError, TypeError, IndexError):
                 return False, "Правильный ответ должен быть номером варианта"
+        elif question_type == 'multiple':
+            if not isinstance(correct_answer, list):
+                return False, "Для типа 'multiple' правильный ответ должен быть списком"
+            if len(correct_answer) == 0:
+                return False, "Для типа 'multiple' должен быть выбран хотя бы один правильный ответ"
+            try:
+                # Проверяем, что все индексы валидны
+                for idx in correct_answer:
+                    answer_index = int(idx)
+                    if answer_index < 0 or answer_index >= len(options):
+                        return False, f"Правильный ответ {answer_index} вне диапазона вариантов"
+            except (ValueError, TypeError):
+                return False, "Правильный ответ должен содержать номера вариантов"
 
     return True, None

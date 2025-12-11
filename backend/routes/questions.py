@@ -76,6 +76,18 @@ def create(user_id, test_id):
         return success_response(question, 201)
     except ValueError as e:
         return error_response(str(e), 400)
+    except Exception as e:
+        # Логируем неожиданные ошибки
+        import logging
+        import traceback
+        logger = logging.getLogger(__name__)
+        error_trace = traceback.format_exc()
+        logger.error(f"Unexpected error creating question: {e}\n{error_trace}")
+        # В режиме разработки возвращаем детали ошибки
+        import os
+        if os.getenv('FLASK_DEBUG') == 'True':
+            return error_response(f'Internal server error: {str(e)}', 500)
+        return error_response('Internal server error', 500)
 
 @questions_bp.route('/<int:test_id>/questions/<int:question_id>', methods=['PUT'])
 @require_auth

@@ -173,6 +173,36 @@
         border-radius: 50%;
     }
 
+    .answer-checkbox {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        position: relative;
+        flex-shrink: 0;
+        transition: all 0.2s;
+    }
+
+    .answer-option:hover .answer-checkbox {
+        border-color: #3b82f6;
+    }
+
+    .answer-option.selected .answer-checkbox {
+        border-color: #3b82f6;
+        background: #3b82f6;
+    }
+
+    .answer-option.selected .answer-checkbox::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
     .answer-text {
         font-size: 16px;
         color: #1a1a1a;
@@ -247,15 +277,23 @@
         <form method="POST" id="test-form">
             {% for question in test.questions %}
             {% set options = question.options | from_json %}
-            <div class="question-slide {% if loop.first %}active{% endif %}" data-question-index="{{ loop.index0 }}">
+            <div class="question-slide {% if loop.first %}active{% endif %}" data-question-index="{{ loop.index0 }}" data-question-type="{{ question.question_type }}" data-question-id="{{ question.id }}">
                 <h2 class="question-text">{{ question.question_text }}</h2>
+                {% if question.question_type == 'multiple' %}
+                <p class="question-hint" style="color: #666; font-size: 14px; margin-bottom: 16px;">Выберите один или несколько вариантов ответа</p>
+                {% endif %}
 
                 <div class="answers-list">
                     {% for option in options %}
                     <label class="answer-option" data-answer="{{ loop.index0 }}">
+                        {% if question.question_type == 'single' %}
                         <div class="answer-radio"></div>
-                        <span class="answer-text">{{ option }}</span>
                         <input type="radio" name="question_{{ question.id }}" value="{{ loop.index0 }}" style="display: none;">
+                        {% else %}
+                        <div class="answer-checkbox"></div>
+                        <input type="checkbox" name="question_{{ question.id }}" value="{{ loop.index0 }}" style="display: none;">
+                        {% endif %}
+                        <span class="answer-text">{{ option }}</span>
                     </label>
                     {% endfor %}
                 </div>
@@ -331,6 +369,7 @@ function showQuestion(index) {
     });
 
     currentQuestionIndex = index;
+    restoreAnswers(); // Восстанавливаем выбранные ответы
     updateProgress();
 }
 
@@ -355,31 +394,59 @@ document.querySelectorAll('.answer-option').forEach(option => {
     option.addEventListener('click', function() {
         const questionSlide = this.closest('.question-slide');
         const questionIndex = parseInt(questionSlide.dataset.questionIndex);
+        const questionType = questionSlide.dataset.questionType;
         const answerIndex = parseInt(this.dataset.answer);
 
-        // Deselect all options in this question
-        questionSlide.querySelectorAll('.answer-option').forEach(opt => {
-            opt.classList.remove('selected');
-        });
+        if (questionType === 'single') {
+            // Для single - снимаем выделение со всех и выбираем только один
+            questionSlide.querySelectorAll('.answer-option').forEach(opt => {
+                opt.classList.remove('selected');
+                const input = opt.querySelector('input[type="radio"]');
+                if (input) input.checked = false;
+            });
 
-        // Select this option
-        this.classList.add('selected');
+            this.classList.add('selected');
+            const radio = this.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+            }
 
-        // Check the hidden radio button
-        const radio = this.querySelector('input[type="radio"]');
-        if (radio) {
-            radio.checked = true;
+            // Сохраняем один ответ
+            answers[questionIndex] = answerIndex;
+        } else {
+            // Для multiple - переключаем состояние этого варианта
+            const checkbox = this.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = !checkbox.checked;
+                if (checkbox.checked) {
+                    this.classList.add('selected');
+                } else {
+                    this.classList.remove('selected');
+                }
+            }
+
+            // Собираем все выбранные ответы
+            const selectedAnswers = [];
+            questionSlide.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                selectedAnswers.push(parseInt(cb.value));
+            });
+            answers[questionIndex] = selectedAnswers.length > 0 ? selectedAnswers : null;
         }
 
-        // Save answer
-        answers[questionIndex] = answerIndex;
         updateProgress();
     });
 });
 
 // Prevent form submission without all answers
 document.getElementById('test-form').addEventListener('submit', function(e) {
-    const unansweredCount = totalQuestions - Object.keys(answers).length;
+    // Проверяем, что на все вопросы есть ответы
+    let unansweredCount = 0;
+    for (let i = 0; i < totalQuestions; i++) {
+        if (answers[i] === undefined || answers[i] === null || 
+            (Array.isArray(answers[i]) && answers[i].length === 0)) {
+            unansweredCount++;
+        }
+    }
 
     if (unansweredCount > 0) {
         e.preventDefault();
@@ -389,6 +456,40 @@ document.getElementById('test-form').addEventListener('submit', function(e) {
 
     return confirm('Вы уверены, что хотите завершить тест?');
 });
+
+// Восстанавливаем выбранные ответы при переключении между вопросами
+function restoreAnswers() {
+    const currentSlide = document.querySelector(`.question-slide[data-question-index="${currentQuestionIndex}"]`);
+    if (!currentSlide) return;
+
+    const questionType = currentSlide.dataset.questionType;
+    const savedAnswer = answers[currentQuestionIndex];
+
+    if (savedAnswer !== undefined && savedAnswer !== null) {
+        if (questionType === 'single') {
+            const radio = currentSlide.querySelector(`input[type="radio"][value="${savedAnswer}"]`);
+            if (radio) {
+                radio.checked = true;
+                const option = radio.closest('.answer-option');
+                if (option) {
+                    currentSlide.querySelectorAll('.answer-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                }
+            }
+        } else {
+            if (Array.isArray(savedAnswer)) {
+                savedAnswer.forEach(answerIndex => {
+                    const checkbox = currentSlide.querySelector(`input[type="checkbox"][value="${answerIndex}"]`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                        const option = checkbox.closest('.answer-option');
+                        if (option) option.classList.add('selected');
+                    }
+                });
+            }
+        }
+    }
+}
 
 // Initialize
 updateProgress();

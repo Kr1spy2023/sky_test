@@ -121,10 +121,16 @@
                             <input type="text" name="questions[0][text]" placeholder="Введите текст вопроса" required>
                         </div>
 
-                        <input type="hidden" name="questions[0][type]" value="single">
+                        <div class="form-group">
+                            <label>Тип вопроса</label>
+                            <select name="questions[0][type]" class="question-type-select">
+                                <option value="single">Один правильный ответ</option>
+                                <option value="multiple">Несколько правильных ответов</option>
+                            </select>
+                        </div>
 
                         <div class="form-group">
-                            <label>Варианты ответов (отметьте правильный)</label>
+                            <label>Варианты ответов (отметьте правильные)</label>
                             <div class="answers-list" data-question="0">
                                 <div class="answer-item">
                                     <input type="checkbox" class="answer-checkbox" name="questions[0][options][0][correct]" value="1">

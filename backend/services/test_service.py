@@ -84,17 +84,50 @@ def create_question(test_id, user_id, data):
     if test.user_id != user_id:
         raise ValueError('Access denied')
 
-    question = Question(
-        test_id=test_id,
-        question_text=data.get('question_text'),
-        question_type=data.get('question_type'),
-        options=json.dumps(data.get('options', [])) if data.get('options') else None,
-        correct_answer=json.dumps(data.get('correct_answer')) if data.get('correct_answer') else None,
-        order_index=data.get('order_index', 0)
-    )
-    db.session.add(question)
-    db.session.commit()
-    return question.to_dict(include_correct_answer=True)
+    # Валидация обязательных полей
+    question_text = data.get('question_text', '').strip()
+    if not question_text:
+        raise ValueError('question_text is required')
+    
+    question_type = data.get('question_type')
+    if not question_type:
+        raise ValueError('question_type is required')
+
+    # Обработка correct_answer: для single типа сохраняем как список [index]
+    correct_answer = data.get('correct_answer')
+    if correct_answer is not None:
+        if question_type == 'single':
+            # Для single типа: если число, преобразуем в список
+            if isinstance(correct_answer, (int, float)):
+                correct_answer = [int(correct_answer)]
+            elif isinstance(correct_answer, list) and len(correct_answer) > 0:
+                # Уже список, берем первый элемент
+                correct_answer = [int(correct_answer[0])]
+            else:
+                correct_answer = None
+        # Для multiple типа оставляем как список
+        elif question_type == 'multiple':
+            if not isinstance(correct_answer, list):
+                raise ValueError('For multiple type, correct_answer must be a list')
+        correct_answer_json = json.dumps(correct_answer) if correct_answer is not None else None
+    else:
+        correct_answer_json = None
+    
+    try:
+        question = Question(
+            test_id=test_id,
+            question_text=question_text,
+            question_type=question_type,
+            options=json.dumps(data.get('options', [])) if data.get('options') else None,
+            correct_answer=correct_answer_json,
+            order_index=data.get('order_index', 0)
+        )
+        db.session.add(question)
+        db.session.commit()
+        return question.to_dict(include_correct_answer=True)
+    except Exception as e:
+        db.session.rollback()
+        raise ValueError(f'Error creating question: {str(e)}')
 
 def update_question(test_id, question_id, user_id, data):
     test = Test.query.get(test_id)

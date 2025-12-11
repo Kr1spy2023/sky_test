@@ -25,10 +25,21 @@ def require_auth(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         auth_header = request.headers.get('Authorization')
-        if not auth_header or not auth_header.startswith('Bearer '):
+        if not auth_header:
             return error_response('Authentication required', 401)
 
-        token = auth_header.split(' ')[1]
+        # Поддержка разных форматов:
+        # 1. "Bearer {token}" - стандартный формат
+        # 2. "{token}" - формат из Swagger UI (без Bearer)
+        if auth_header.startswith('Bearer '):
+            token = auth_header.split(' ', 1)[1]  # Берем все после "Bearer "
+        else:
+            # Если нет префикса "Bearer ", считаем что весь заголовок - это токен
+            token = auth_header.strip()
+
+        if not token:
+            return error_response('Authentication required', 401)
+
         user_id = decode_token(token)
 
         if not user_id:

@@ -101,6 +101,29 @@
     justify-content: center;
 }
 
+/* Question Type Select */
+.question-type-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 15px;
+    background: white;
+    color: #1a1a1a;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.question-type-select:hover {
+    border-color: #3b82f6;
+}
+
+.question-type-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
 /* Form Actions */
 .form-actions {
     display: flex;

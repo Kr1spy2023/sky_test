@@ -1,3 +1,8 @@
+"""
+Маршруты для отображения HTML страниц (views)
+Обрабатывает все страницы интерфейса: вход, регистрация, дашборд, создание тестов и т.д.
+"""
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from functools import wraps
 from sqlalchemy.exc import IntegrityError, OperationalError
@@ -9,7 +14,10 @@ from backend.models import db
 views_bp = Blueprint('views', __name__)
 
 def login_required(f):
-    """Декоратор для проверки авторизации"""
+    """
+    Декоратор для защиты страниц, требующих авторизации
+    Если пользователь не залогинен - перенаправляет на страницу входа
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
@@ -53,6 +61,13 @@ def register():
 
         if password != confirm_password:
             flash('Пароли не совпадают', 'error')
+            return render_template('register.html')
+
+        # Валидация пароля
+        from backend.utils.validation import validate_password
+        is_valid, error_msg = validate_password(password)
+        if not is_valid:
+            flash(error_msg, 'error')
             return render_template('register.html')
 
         # Проверка существования пользователя
@@ -144,16 +159,20 @@ def create_test():
             db.session.add(test)
             db.session.flush()
 
-            # Добавить вопросы
+            # Парсинг вопросов из формы
+            # Форма генерируется JavaScript и имеет структуру: questions[0][text], questions[0][options][0][text]
             from backend.models.question import Question
             import json
 
+            # Сначала находим все индексы вопросов (может быть не подряд, если удалялись)
             question_indices = set()
             for key in request.form.keys():
                 if key.startswith('questions[') and key.endswith('][text]'):
+                    # Извлекаем индекс из строки вида "questions[3][text]"
                     index = key.split('[')[1].split(']')[0]
                     question_indices.add(int(index))
 
+            # Обрабатываем каждый вопрос по порядку
             for idx in sorted(question_indices):
                 question_text = request.form.get(f'questions[{idx}][text]', '').strip()
                 question_type = request.form.get(f'questions[{idx}][type]', 'single')
@@ -161,28 +180,36 @@ def create_test():
                 if not question_text:
                     continue
 
-                # Собрать варианты ответов
+                # Собираем все варианты ответов для этого вопроса
                 options = []
                 correct_answers = []
                 option_idx = 0
+                # Идем по индексам пока не закончатся варианты
                 while True:
                     option_text = request.form.get(f'questions[{idx}][options][{option_idx}][text]', '').strip()
                     if not option_text:
-                        break
+                        break  # Варианты закончились
 
                     options.append(option_text)
+                    # Если чекбокс "правильный ответ" был отмечен
                     if request.form.get(f'questions[{idx}][options][{option_idx}][correct]'):
                         correct_answers.append(option_idx)
 
                     option_idx += 1
 
-                # Создать вопрос
+                # Формат правильных ответов зависит от типа вопроса
+                # single: сохраняем как список (для совместимости с логикой проверки)
+                # multiple: сохраняем как список
+                correct_answer_json = json.dumps(correct_answers) if correct_answers else None
+
+                # Создаем вопрос и сохраняем в БД
+                # options и correct_answer сохраняются как JSON строки
                 question = Question(
                     test_id=test.id,
                     question_text=question_text,
                     question_type=question_type,
                     options=json.dumps(options) if options else None,
-                    correct_answer=json.dumps(correct_answers) if correct_answers else None,
+                    correct_answer=correct_answer_json,
                     order_index=idx
                 )
                 db.session.add(question)
@@ -398,66 +425,81 @@ def take_test(link_token):
         return redirect(url_for('views.index'))
 
     if request.method == 'POST':
-        # Проверка авторизации для сохранения результатов
+        # Только авторизованные пользователи могут сохранять результаты
         if 'user_id' not in session:
             flash('Войдите в систему для сохранения результатов', 'warning')
             return redirect(url_for('views.login'))
 
         try:
-            # Создать попытку
+            # Создаем запись о попытке прохождения теста
             attempt = TestAttempt(
                 test_id=test.id,
                 user_id=session['user_id']
             )
             db.session.add(attempt)
-            db.session.flush()
+            db.session.flush()  # Получаем attempt.id для связи с ответами
 
-            # Сохранить ответы и подсчитать правильные
+            # Обрабатываем каждый вопрос и подсчитываем правильные ответы
             correct_count = 0
             total_questions = len(test.questions)
 
             for question in test.questions:
+                # Получаем ответ пользователя из формы (поле называется question_{id})
                 answer_key = f'question_{question.id}'
                 user_answer = request.form.get(answer_key)
 
+                # Для множественного выбора (checkboxes) нужен getlist
                 if question.question_type == 'multiple':
-                    # Для множественного выбора собираем все отмеченные варианты
                     user_answer = request.form.getlist(answer_key)
-                    user_answer = json.dumps([int(a) for a in user_answer])
+                    user_answer = json.dumps([int(a) for a in user_answer]) if user_answer else ''
+                elif question.question_type == 'single':
+                    # Для single типа сохраняем как число
+                    user_answer = user_answer if user_answer else ''
 
-                # Сохранить ответ
+                # Сохраняем ответ в БД
                 answer = Answer(
                     attempt_id=attempt.id,
                     question_id=question.id,
-                    user_answer=user_answer if user_answer else ''
+                    user_answer=user_answer
                 )
                 db.session.add(answer)
 
-                # Проверить правильность
+                # Проверяем правильность ответа
                 if question.correct_answer:
                     try:
                         correct = json.loads(question.correct_answer)
+                        # Проверка для множественного выбора (порядок не важен, поэтому sorted)
                         if question.question_type == 'multiple':
                             user_ans = json.loads(user_answer) if user_answer else []
-                            if sorted(user_ans) == sorted(correct):
-                                correct_count += 1
+                            if isinstance(correct, list) and isinstance(user_ans, list):
+                                if sorted(user_ans) == sorted(correct):
+                                    correct_count += 1
+                        # Проверка для одиночного выбора
                         elif question.question_type == 'single':
-                            if user_answer and int(user_answer) in correct:
-                                correct_count += 1
+                            if user_answer:
+                                user_ans_int = int(user_answer)
+                                # correct может быть списком [0] или числом 0
+                                if isinstance(correct, list):
+                                    if len(correct) > 0 and user_ans_int == correct[0]:
+                                        correct_count += 1
+                                else:
+                                    if user_ans_int == correct:
+                                        correct_count += 1
+                        # Проверка для текстового ответа (без учета регистра)
                         else:  # text
                             if user_answer and user_answer.strip().lower() == str(correct).lower():
                                 correct_count += 1
                     except:
-                        pass
+                        pass  # Игнорируем ошибки парсинга
 
-            # Завершить попытку
+            # Подсчитываем итоговый процент правильных ответов
             attempt.score = int((correct_count / total_questions) * 100) if total_questions > 0 else 0
             attempt.completed = True
-            attempt.finished_at = datetime.utcnow()
+            attempt.finished_at = datetime.utcnow()  # Фиксируем время завершения
 
             db.session.commit()
 
-            # Перенаправить на страницу результата
+            # Перенаправляем на страницу с результатом
             return redirect(url_for('views.test_result', attempt_id=attempt.id))
 
         except Exception as e:
