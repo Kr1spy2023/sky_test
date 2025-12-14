@@ -38,5 +38,4 @@ class User(db.Model):
             'id': self.id,
             'name': self.name,
             'email': self.email
-            # password_hash НЕ включаем в ответ (безопасность!)
         }

@@ -1,3 +1,10 @@
+"""
+API маршруты для управления вопросами тестов
+"""
+
+import os
+import logging
+import traceback
 from flask import Blueprint, request
 from backend.services.test_service import create_question, update_question, delete_question
 from backend.utils.responses import success_response, error_response
@@ -5,6 +12,7 @@ from backend.utils.jwt_utils import require_auth
 from backend.utils.validation import validate_question_type, validate_question_options
 
 questions_bp = Blueprint('questions', __name__, url_prefix='/api/tests')
+logger = logging.getLogger(__name__)
 
 @questions_bp.route('/<int:test_id>/questions', methods=['POST'])
 @require_auth
@@ -57,12 +65,10 @@ def create(user_id, test_id):
     if not data or 'question_text' not in data or 'question_type' not in data:
         return error_response('Missing required fields', 400)
 
-    # Validate question type
     is_valid_type, type_error = validate_question_type(data['question_type'])
     if not is_valid_type:
         return error_response(type_error, 400)
 
-    # Validate options for choice questions
     is_valid_options, options_error = validate_question_options(
         data['question_type'],
         data.get('options', []),
@@ -77,14 +83,8 @@ def create(user_id, test_id):
     except ValueError as e:
         return error_response(str(e), 400)
     except Exception as e:
-        # Логируем неожиданные ошибки
-        import logging
-        import traceback
-        logger = logging.getLogger(__name__)
         error_trace = traceback.format_exc()
         logger.error(f"Unexpected error creating question: {e}\n{error_trace}")
-        # В режиме разработки возвращаем детали ошибки
-        import os
         if os.getenv('FLASK_DEBUG') == 'True':
             return error_response(f'Internal server error: {str(e)}', 500)
         return error_response('Internal server error', 500)

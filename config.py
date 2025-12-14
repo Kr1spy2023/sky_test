@@ -2,7 +2,6 @@
 Конфигурация приложения - настройки БД, секретного ключа, CORS
 Значения берутся из .env файла или используются значения по умолчанию
 """
-
 import os
 from dotenv import load_dotenv
 
@@ -13,10 +12,10 @@ load_dotenv()
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-    # Секретный ключ для подписи сессий и токенов (ВАЖНО: изменить в production!)
+    # Секретный ключ для подписи сессий и токенов
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
 
-    # Путь к базе данных SQLite (по умолчанию в папке database/)
+    # Путь к базе данных SQLite
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', f'sqlite:///{os.path.join(BASE_DIR, "database", "tests.db")}')
 
     # Отключаем отслеживание модификаций (не нужно, экономит память)

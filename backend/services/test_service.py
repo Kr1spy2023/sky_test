@@ -1,3 +1,7 @@
+"""
+Сервис для работы с тестами и вопросами
+"""
+
 import json
 import uuid
 from backend.models import db
@@ -59,7 +63,6 @@ def publish_test(test_id, user_id):
     if test.user_id != user_id:
         raise ValueError('Access denied')
 
-    # Check if test has at least one question
     question_count = Question.query.filter_by(test_id=test_id).count()
     if question_count == 0:
         raise ValueError('Cannot publish test without questions. Add at least one question.')

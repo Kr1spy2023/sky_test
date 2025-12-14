@@ -1,3 +1,7 @@
+"""
+Утилиты для работы с JWT токенами
+"""
+
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
@@ -28,9 +32,9 @@ def require_auth(f):
         if not auth_header:
             return error_response('Authentication required', 401)
 
-        # Поддержка разных форматов:
-        # 1. "Bearer {token}" - стандартный формат
-        # 2. "{token}" - формат из Swagger UI (без Bearer)
+        # Поддержка разных форматов токена в заголовке Authorization:
+        # 1. "Bearer {token}" - стандартный формат OAuth 2.0
+        # 2. "{token}" - упрощенный формат (используется Swagger UI)
         if auth_header.startswith('Bearer '):
             token = auth_header.split(' ', 1)[1]  # Берем все после "Bearer "
         else:

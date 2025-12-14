@@ -1,21 +1,7 @@
-# Quiz Platform Backend - Dependencies
-# =====================================
-
-# Core Framework
 Flask==3.0.0
 python-dotenv==1.0.0
-
-# Database
 Flask-SQLAlchemy==3.1.1
-
-# CORS Support
 Flask-CORS==4.0.0
-
-# API Documentation (Swagger UI)
 Flasgger==0.9.7.1
-
-# Authentication
 PyJWT==2.8.0
-
-# Password Hashing
 Werkzeug==3.0.1

@@ -4,11 +4,17 @@ Sky Test - Веб-приложение для создания и прохожд
 """
 
 import os
+import json
 from flask import Flask, render_template
 from flasgger import Swagger
-from config import Config
 from flask_cors import CORS
+from config import Config
 from backend.models import db
+from backend.models.user import User
+from backend.models.test import Test
+from backend.models.question import Question
+from backend.models.attempt import TestAttempt
+from backend.models.answer import Answer
 from backend.routes.auth import auth_bp
 from backend.routes.tests import tests_bp
 from backend.routes.questions import questions_bp
@@ -46,7 +52,7 @@ swagger_config = {
 
 swagger_template = {
     "info": {
-        "title": "Quiz Platform API",
+        "title": "Sky Test API",
         "description": "API для платформы тестирования",
         "version": "1.0.0"
     },
@@ -64,7 +70,6 @@ Swagger(app, config=swagger_config, template=swagger_template)
 
 # Кастомный фильтр Jinja2 для парсинга JSON в шаблонах
 # Используется для преобразования JSON строк (например, вариантов ответов) в список
-import json
 @app.template_filter('from_json')
 def from_json_filter(value):
     """Парсит JSON строку в Python объект (список/словарь)"""
@@ -84,7 +89,7 @@ app.register_blueprint(attempts_bp)    # /api/attempts/*
 app.register_blueprint(statistics_bp)  # /api/statistics/*
 
 # HTML views для браузера
-app.register_blueprint(views_bp)       # /, /login, /dashboard, etc.
+app.register_blueprint(views_bp)
 
 # Обработчики ошибок - показывают красивые страницы вместо стандартных ошибок
 @app.errorhandler(404)
@@ -101,11 +106,6 @@ def internal_error(e):
 
 # Создание таблиц в базе данных при первом запуске
 with app.app_context():
-    from backend.models.user import User
-    from backend.models.test import Test
-    from backend.models.question import Question
-    from backend.models.attempt import TestAttempt
-    from backend.models.answer import Answer
     db.create_all()  # Создает таблицы если их ещё нет
 
 # Точка входа - запуск сервера

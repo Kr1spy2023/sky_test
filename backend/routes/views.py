@@ -3,13 +3,19 @@
 Обрабатывает все страницы интерфейса: вход, регистрация, дашборд, создание тестов и т.д.
 """
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+import json
+import secrets
 from functools import wraps
-from sqlalchemy.exc import IntegrityError, OperationalError
 from datetime import datetime
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from sqlalchemy.exc import IntegrityError, OperationalError
+from backend.models import db
 from backend.models.user import User
 from backend.models.test import Test
-from backend.models import db
+from backend.models.question import Question
+from backend.models.attempt import TestAttempt
+from backend.models.answer import Answer
+from backend.utils.validation import validate_password
 
 views_bp = Blueprint('views', __name__)
 
@@ -64,7 +70,6 @@ def register():
             return render_template('register.html')
 
         # Валидация пароля
-        from backend.utils.validation import validate_password
         is_valid, error_msg = validate_password(password)
         if not is_valid:
             flash(error_msg, 'error')
@@ -153,7 +158,6 @@ def create_test():
             )
 
             if is_published:
-                import secrets
                 test.link_token = secrets.token_urlsafe(32)
 
             db.session.add(test)
@@ -161,8 +165,6 @@ def create_test():
 
             # Парсинг вопросов из формы
             # Форма генерируется JavaScript и имеет структуру: questions[0][text], questions[0][options][0][text]
-            from backend.models.question import Question
-            import json
 
             # Сначала находим все индексы вопросов (может быть не подряд, если удалялись)
             question_indices = set()
@@ -271,12 +273,9 @@ def edit_test(test_id):
             test.is_published = is_published
 
             if is_published and not test.link_token:
-                import secrets
                 test.link_token = secrets.token_urlsafe(32)
 
             # Удалить все старые вопросы
-            from backend.models.question import Question
-            import json
 
             for question in test.questions:
                 db.session.delete(question)
@@ -373,7 +372,6 @@ def settings():
             else:
                 try:
                     # Валидация
-                    from backend.utils.validation import validate_password
                     is_valid, error_msg = validate_password(new_password)
                     if not is_valid:
                         flash(error_msg, 'error')
@@ -413,12 +411,6 @@ def settings():
 @views_bp.route('/take-test/<string:link_token>', methods=['GET', 'POST'])
 def take_test(link_token):
     """Страница прохождения теста"""
-    from backend.models.test import Test
-    from backend.models.attempt import TestAttempt
-    from backend.models.answer import Answer
-    from backend.models.question import Question
-    import json
-
     test = Test.query.filter_by(link_token=link_token).first()
     if not test or not test.is_published:
         flash('Тест не найден или не опубликован', 'error')
@@ -512,8 +504,6 @@ def take_test(link_token):
 @views_bp.route('/test-result/<int:attempt_id>')
 def test_result(attempt_id):
     """Страница результата прохождения теста"""
-    from backend.models.attempt import TestAttempt
-
     attempt = TestAttempt.query.get_or_404(attempt_id)
     test = Test.query.get_or_404(attempt.test_id)
 

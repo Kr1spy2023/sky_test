@@ -4,12 +4,12 @@
 
 import json
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 from backend.models import db
 from backend.models.test import Test
 from backend.models.question import Question
 from backend.models.attempt import TestAttempt
 from backend.models.answer import Answer
-
 def start_attempt(test_id, user_id):
     """Создание новой попытки прохождения теста"""
     test = Test.query.get(test_id)
@@ -40,8 +40,6 @@ def submit_answer(attempt_id, question_id, answer_data, user_id):
     question = Question.query.get(question_id)
     if not question or question.test_id != attempt.test_id:
         raise ValueError('Question not found')
-
-    from sqlalchemy.exc import IntegrityError
 
     # Проверяем существует ли уже ответ на этот вопрос (для обновления)
     existing_answer = Answer.query.filter_by(

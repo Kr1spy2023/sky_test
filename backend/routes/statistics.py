@@ -1,3 +1,7 @@
+"""
+API маршруты для получения статистики
+"""
+
 from flask import Blueprint, request
 from backend.services.stats_service import (
     get_test_statistics, get_test_attempts, get_user_statistics

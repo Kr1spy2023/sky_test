@@ -1,3 +1,7 @@
+"""
+API маршруты для управления тестами
+"""
+
 from flask import Blueprint, request
 from backend.services.test_service import (
     create_test, get_user_tests, get_test, update_test,

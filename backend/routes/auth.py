@@ -1,3 +1,7 @@
+"""
+API маршруты для аутентификации и управления профилем пользователя
+"""
+
 from flask import Blueprint, request
 from backend.services.auth_service import register_user, login_user, get_user_profile, update_user_profile
 from backend.utils.responses import success_response, error_response
@@ -43,12 +47,12 @@ def register():
     if not data or not all(k in data for k in ('name', 'email', 'password')):
         return error_response('Missing required fields', 400)
 
-    # Validate email
+    # Валидация email
     is_valid_email, email_error = validate_email(data['email'])
     if not is_valid_email:
         return error_response(email_error, 400)
 
-    # Validate password
+    # Валидация пароля
     is_valid_password, password_error = validate_password(data['password'])
     if not is_valid_password:
         return error_response(password_error, 400)

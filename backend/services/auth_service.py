@@ -55,7 +55,7 @@ def login_user(email, password):
     """Вход пользователя - проверка email и пароля"""
     user = User.query.filter_by(email=email).first()
 
-    # Проверка пароля через bcrypt (verify_password использует bcrypt)
+    # Проверка пароля через bcrypt
     if not user or not verify_password(password, user.password_hash):
         raise ValueError('Invalid email or password')
 

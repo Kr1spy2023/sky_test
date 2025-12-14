@@ -1,18 +1,21 @@
 """
-Validation utilities for user input
+Утилиты валидации входных данных пользователя
 """
+
 import re
 
 
 def validate_email(email):
     """
-    Validate email format
+    Валидация формата email адреса
 
     Args:
-        email: Email address to validate
+        email: Email адрес для проверки
 
     Returns:
         tuple: (is_valid, error_message)
+            is_valid: True если email корректен, False в противном случае
+            error_message: Сообщение об ошибке или None если валидация прошла успешно
     """
     if not email or not isinstance(email, str):
         return False, "Email обязателен"
@@ -33,13 +36,15 @@ def validate_email(email):
 
 def validate_password(password):
     """
-    Validate password strength
+    Валидация надежности пароля
 
     Args:
-        password: Password to validate
+        password: Пароль для проверки
 
     Returns:
         tuple: (is_valid, error_message)
+            is_valid: True если пароль соответствует требованиям, False в противном случае
+            error_message: Сообщение об ошибке или None если валидация прошла успешно
     """
     if not password or not isinstance(password, str):
         return False, "Пароль обязателен"
@@ -67,13 +72,20 @@ def validate_password(password):
 
 def validate_question_type(question_type):
     """
-    Validate question type
+    Валидация типа вопроса
+
+    Разрешенные типы вопросов:
+    - 'single': выбор одного варианта ответа (radio buttons)
+    - 'multiple': выбор нескольких вариантов ответа (checkboxes)
+
 
     Args:
-        question_type: Type of question
+        question_type: Тип вопроса для проверки
 
     Returns:
         tuple: (is_valid, error_message)
+            is_valid: True если тип вопроса допустим, False в противном случае
+            error_message: Сообщение об ошибке или None если валидация прошла успешно
     """
     allowed_types = ['single', 'multiple', 'text']
 
@@ -88,15 +100,24 @@ def validate_question_type(question_type):
 
 def validate_question_options(question_type, options, correct_answer):
     """
-    Validate question options and correct answer
+    Валидация вариантов ответов и правильного ответа для вопроса
+
+    Правила валидации:
+    - Для типов 'single' и 'multiple' варианты ответов обязательны (минимум 2)
+    - Правильный ответ должен соответствовать типу вопроса:
+      * 'single': одно число (индекс варианта) или список с одним элементом
+      * 'multiple': список индексов вариантов (минимум один)
+    - Индексы правильных ответов должны быть в допустимом диапазоне
 
     Args:
-        question_type: Type of question
-        options: List of answer options
-        correct_answer: Correct answer value
+        question_type: Тип вопроса ('single', 'multiple')
+        options: Список вариантов ответов
+        correct_answer: Правильный ответ (число, список или строка в зависимости от типа)
 
     Returns:
         tuple: (is_valid, error_message)
+            is_valid: True если варианты и правильный ответ корректны, False в противном случае
+            error_message: Сообщение об ошибке или None если валидация прошла успешно
     """
 
     if question_type == 'text':

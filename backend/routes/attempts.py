@@ -1,3 +1,7 @@
+"""
+API маршруты для прохождения тестов
+"""
+
 from flask import Blueprint, request
 from backend.services.attempt_service import (
     start_attempt, submit_answer, finish_attempt, get_attempt_results

@@ -1,3 +1,7 @@
+"""
+Сервис для получения статистики
+"""
+
 from sqlalchemy import func
 from backend.models import db
 from backend.models.test import Test

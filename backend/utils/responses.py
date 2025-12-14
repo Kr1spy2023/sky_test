@@ -1,15 +1,25 @@
+"""
+Утилиты для формирования стандартизированных ответов API
+"""
+
 from flask import jsonify
 
 def success_response(data=None, status_code=200):
     """
-    Стандартный формат успешного ответа API
+    Формирование стандартного успешного ответа API
+
+    Args:
+        data: Данные для возврата клиенту (любой JSON-сериализуемый объект)
+        status_code: HTTP статус код (по умолчанию 200)
 
     Returns:
-        {
-            'success': True,
-            'data': {...},
-            'error': None
-        }
+        tuple: (Response, status_code)
+            Response: Flask Response объект с JSON данными в формате:
+                {
+                    'success': True,
+                    'data': {...},
+                    'error': None
+                }
     """
     return jsonify({
         'success': True,
@@ -19,14 +29,20 @@ def success_response(data=None, status_code=200):
 
 def error_response(message, status_code=400):
     """
-    Стандартный формат ошибки API
+    Формирование стандартного ответа об ошибке API
+
+    Args:
+        message: Текст сообщения об ошибке
+        status_code: HTTP статус код (по умолчанию 400)
 
     Returns:
-        {
-            'success': False,
-            'data': None,
-            'error': "error message"
-        }
+        tuple: (Response, status_code)
+            Response: Flask Response объект с JSON данными в формате:
+                {
+                    'success': False,
+                    'data': None,
+                    'error': "error message"
+                }
     """
     return jsonify({
         'success': False,
